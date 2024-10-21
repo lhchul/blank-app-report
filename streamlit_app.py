@@ -3,12 +3,16 @@ import pandas as pd
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
+import os
 
-# 시스템의 나눔고딕 폰트 자동 검색 및 설정
+# 시스템에서 나눔고딕 폰트 경로 찾기
 def get_font_path():
-    for font in fm.findSystemFonts(fontpaths=None, fontext='ttf'):
-        if 'NanumGothic' in font:
-            return font
+    font_dirs = ["/usr/share/fonts", "/usr/local/share/fonts", "C:/Windows/Fonts"]
+    for font_dir in font_dirs:
+        for root, _, files in os.walk(font_dir):
+            for file in files:
+                if "NanumGothic" in file:
+                    return os.path.join(root, file)
     st.error("❌ 'NanumGothic' 폰트를 찾을 수 없습니다. 시스템에 폰트를 설치하세요.")
     st.stop()
 
@@ -27,7 +31,7 @@ except ModuleNotFoundError:
 
 # 유사한 통합국명 찾기 함수 (대소문자 구분 없이)
 def find_similar_location(input_name, locations):
-    input_name = input_name.lower()  # 입력을 소문자로 변환
+    input_name = input_name.lower()
     locations = [loc.lower() for loc in locations]
     vectorizer = CountVectorizer().fit_transform([input_name] + locations)
     vectors = vectorizer.toarray()
@@ -86,12 +90,8 @@ if uploaded_file is not None:
         ax.set_title(f"'{most_similar_location}' 지역의 일주일 최고 온도 추이", fontsize=15)
         ax.set_xlabel('날짜', fontsize=12)
         ax.set_ylabel('최고 온도 (°C)', fontsize=12)
-        plt.xticks(rotation=45)  # 날짜 보기 좋게 회전
+        plt.xticks(rotation=45)
         plt.grid(True)
 
         # 그래프 출력
         st.pyplot(fig)
-
-
-
-

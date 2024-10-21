@@ -2,6 +2,12 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+
+# 한글 폰트 설정 (나눔고딕)
+font_path = "/usr/share/fonts/truetype/nanum/NanumGothic.ttf"
+font_prop = fm.FontProperties(fname=font_path)
+plt.rc('font', family=font_prop.get_name())
 
 # scikit-learn 라이브러리 오류 처리
 try:
@@ -11,9 +17,9 @@ except ModuleNotFoundError:
     st.error("❌ 'scikit-learn' 라이브러리가 설치되지 않았습니다. 아래 명령어로 설치하세요:\n\n`pip install scikit-learn`")
     st.stop()
 
-# 유사한 통합국명 찾기 함수 (대소문자 무시)
+# 유사한 통합국명 찾기 함수 (대소문자 구분 없이)
 def find_similar_location(input_name, locations):
-    input_name = input_name.lower()  # 대소문자 구분 없이 처리
+    input_name = input_name.lower()  # 입력을 소문자로 변환
     locations = [loc.lower() for loc in locations]
     vectorizer = CountVectorizer().fit_transform([input_name] + locations)
     vectors = vectorizer.toarray()
@@ -56,7 +62,7 @@ if uploaded_file is not None:
         max_temp = week_ago_data['온도'].max()
         min_temp = week_ago_data['온도'].min()
 
-        # 일주일 최고 온도 TREND 계산
+        # 일주일 최고 온도 추이 계산
         max_temp_trend = week_ago_data.groupby('dt')['온도'].max()
 
         # 결과 출력
@@ -77,5 +83,6 @@ if uploaded_file is not None:
 
         # 그래프 출력
         st.pyplot(fig)
+
 
 

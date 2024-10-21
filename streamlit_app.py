@@ -14,7 +14,7 @@ def find_similar_location(input_name, locations):
     return locations[most_similar_index]
 
 # Streamlit 앱 타이틀
-st.title("온도 데이터 대시보드")
+st.title("온도 데이터 대시보드_1234")
 
 # CSV 파일 업로드
 uploaded_file = st.file_uploader("CSV 파일을 업로드하세요:", type="csv")

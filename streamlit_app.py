@@ -23,13 +23,21 @@ if uploaded_file is not None:
     # CSV 파일 읽기
     data = pd.read_csv(uploaded_file)
 
-    # 통합국명 입력받기
-    user_input = st.text_input("통합국명을 입력하세요:", "경북b구미")
+    # 모든 통합국명 리스트 생성
+    unique_locations = data['통합국명'].unique()
 
-    if user_input:
+    # 통합국명 선택 입력 (셀렉트박스 제공)
+    user_input = st.selectbox("통합국명을 선택하거나 직접 입력하세요:", unique_locations, index=0)
+
+    # 직접 입력 옵션
+    manual_input = st.text_input("직접 입력하려면 여기에 통합국명을 입력하세요:")
+
+    # 입력된 값을 우선 처리
+    selected_location = manual_input if manual_input else user_input
+
+    if selected_location:
         # 유사한 통합국명 찾기
-        unique_locations = data['통합국명'].unique()
-        most_similar_location = find_similar_location(user_input, unique_locations)
+        most_similar_location = find_similar_location(selected_location, unique_locations)
 
         # 해당 통합국명의 데이터 필터링
         filtered_data = data[data['통합국명'] == most_similar_location]
@@ -67,3 +75,4 @@ if uploaded_file is not None:
 
         # 그래프 출력
         st.pyplot(fig)
+

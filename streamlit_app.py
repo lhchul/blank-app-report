@@ -1,9 +1,16 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 
-# scikit-learn 라이브러리 오류 처리
+# matplotlib 및 scikit-learn 라이브러리 오류 처리
+try:
+    import matplotlib.pyplot as plt
+except ModuleNotFoundError:
+    st.error("❌ 'matplotlib' 라이브러리가 설치되지 않았습니다. "
+             "아래 명령어를 실행해 설치하세요:\n\n"
+             "`pip install matplotlib`")
+    st.stop()  # 앱 실행 중단
+
 try:
     from sklearn.metrics.pairwise import cosine_similarity
     from sklearn.feature_extraction.text import CountVectorizer
@@ -52,26 +59,5 @@ if uploaded_file is not None:
         week_ago_data = filtered_data[pd.to_datetime(filtered_data['날짜']) >= one_week_ago]
 
         # 일주일 최고/최저 온도 계산
-        max_temp = week_ago_data['온도'].max()
-        min_temp = week_ago_data['온도'].min()
+        max_temp = week_ago_data['온도'].max
 
-        # 일주일 최고 온도 TREND 계산
-        max_temp_trend = week_ago_data.groupby('dt')['온도'].max()
-
-        # 결과 출력
-        st.write(f"📍 가장 유사한 통합국명: {most_similar_location}")
-        st.write(f"🌡️ 가장 최근 온도: {latest_temp}°C (측정일: {latest_date})")
-        st.write(f"🔺 일주일 최고 온도: {max_temp}°C")
-        st.write(f"🔻 일주일 최저 온도: {min_temp}°C")
-
-        # 일주일 최고 온도 트렌드 그래프 시각화
-        fig, ax = plt.subplots(figsize=(10, 5))
-        ax.plot(max_temp_trend.index.astype(str), max_temp_trend.values, marker='o', linestyle='-', linewidth=2)
-        ax.set_title(f"'{most_similar_location}' 지역의 일주일 최고 온도 추이", fontsize=15)
-        ax.set_xlabel('날짜', fontsize=12)
-        ax.set_ylabel('최고 온도 (°C)', fontsize=12)
-        plt.xticks(rotation=45)  # 날짜 보기 좋게 회전
-        plt.grid(True)
-
-        # 그래프 출력
-        st.pyplot(fig)

@@ -4,8 +4,16 @@ from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
-# 한글 폰트 설정 (나눔고딕)
-font_path = "/usr/share/fonts/truetype/nanum/NanumGothic.ttf"
+# 시스템의 나눔고딕 폰트 자동 검색 및 설정
+def get_font_path():
+    for font in fm.findSystemFonts(fontpaths=None, fontext='ttf'):
+        if 'NanumGothic' in font:
+            return font
+    st.error("❌ 'NanumGothic' 폰트를 찾을 수 없습니다. 시스템에 폰트를 설치하세요.")
+    st.stop()
+
+# 한글 폰트 설정
+font_path = get_font_path()
 font_prop = fm.FontProperties(fname=font_path)
 plt.rc('font', family=font_prop.get_name())
 
@@ -83,6 +91,7 @@ if uploaded_file is not None:
 
         # 그래프 출력
         st.pyplot(fig)
+
 
 
 

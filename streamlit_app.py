@@ -1,9 +1,17 @@
 import streamlit as st
 import pandas as pd
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import CountVectorizer
-from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
+
+# scikit-learn 라이브러리 오류 처리
+try:
+    from sklearn.metrics.pairwise import cosine_similarity
+    from sklearn.feature_extraction.text import CountVectorizer
+except ModuleNotFoundError:
+    st.error("❌ 'scikit-learn' 라이브러리가 설치되지 않았습니다. "
+             "아래 명령어를 실행해 설치하세요:\n\n"
+             "`pip install scikit-learn`")
+    st.stop()  # 앱 실행 중단
 
 # 유사한 통합국명 찾기 함수
 def find_similar_location(input_name, locations):
@@ -14,7 +22,7 @@ def find_similar_location(input_name, locations):
     return locations[most_similar_index]
 
 # Streamlit 앱 타이틀
-st.title("온도 데이터 대시보드_1234")
+st.title("온도 데이터 대시보드")
 
 # CSV 파일 업로드
 uploaded_file = st.file_uploader("CSV 파일을 업로드하세요:", type="csv")
@@ -47,7 +55,7 @@ if uploaded_file is not None:
         max_temp = week_ago_data['온도'].max()
         min_temp = week_ago_data['온도'].min()
 
-        # 일주일 최고 온도 트렌드 계산
+        # 일주일 최고 온도 TREND 계산
         max_temp_trend = week_ago_data.groupby('dt')['온도'].max()
 
         # 결과 출력

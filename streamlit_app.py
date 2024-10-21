@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import os
 
-# 시스템에서 나눔고딕 폰트 경로 찾기
+# 시스템의 나눔고딕 폰트를 자동으로 찾기
 def get_font_path():
     font_dirs = ["/usr/share/fonts", "/usr/local/share/fonts", "C:/Windows/Fonts"]
     for font_dir in font_dirs:
@@ -95,3 +95,4 @@ if uploaded_file is not None:
 
         # 그래프 출력
         st.pyplot(fig)
+
